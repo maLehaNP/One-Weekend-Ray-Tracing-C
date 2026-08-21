@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <vec3.h>
+#include <color.h>
 
 
 int main() {
@@ -24,15 +26,12 @@ int main() {
     int i;
     for (i = 0; i < imageWidth; i++)
     {
-      double r = (double)i / (imageWidth - 1);
-      double g = (double)j / (imageHeight - 1);
-      double b = 0.;
-
-      int ir = (int)(255.999 * r);
-      int ig = (int)(255.999 * g);
-      int ib = (int)(255.999 * b);
-
-      printf("%d %d %d\n", ir, ig, ib);
+      color pixelColor = {
+        (double)i / (imageWidth - 1),
+        (double)j / (imageHeight - 1),
+        0.
+      };
+      writeColor(stdout, &pixelColor);
     }
   }
   fprintf(stderr, "\nDone.\n");

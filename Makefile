@@ -1,10 +1,13 @@
-CC=gcc
-CFLAGS=-g -std=c89
+CC = gcc
+CFLAGS = -g -std=c89 -I include#-O3 -flto
+LDFLAGS = -lm
+SOURCES = src/main.c
+HEADERS = include/vec3.h include/color.h
 
 all: main
 
-main: main.c
-	${CC} main.c ${CFLAGS} -o main
+main: ${SOURCES} ${HEADERS}
+	${CC} ${SOURCES} ${CFLAGS} ${LDFLAGS} -o $@
 
 run:
 	./main > image.ppm

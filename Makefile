@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-g -std=c89
 
-all: main run
+all: main
 
 main: main.c
 	${CC} main.c ${CFLAGS} -o main

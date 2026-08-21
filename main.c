@@ -3,7 +3,7 @@
 
 int main() {
   /*printf("Hello, World! C Standart Version: %ld\n", __STDC_VERSION__);*/
-  fprintf(stderr, "Hello, World! __STDC__ = %d\n", __STDC__);
+  fprintf(stderr, "Hello! __STDC__ = %d\n", __STDC__);
 
   /* Image */
 
@@ -17,9 +17,13 @@ int main() {
   printf("255\n");  /* Max color */
 
   int j;
-  for (j = 0; j < imageHeight; j++) {
+  for (j = 0; j < imageHeight; j++)
+  {
+    fprintf(stderr, "\rScanlines remaining: %d           ", imageHeight - j);
+    /*fflush(stderr);*/  /* Flush to display immediately */
     int i;
-    for (i = 0; i < imageWidth; i++) {
+    for (i = 0; i < imageWidth; i++)
+    {
       double r = (double)i / (imageWidth - 1);
       double g = (double)j / (imageHeight - 1);
       double b = 0.;
@@ -31,6 +35,7 @@ int main() {
       printf("%d %d %d\n", ir, ig, ib);
     }
   }
+  fprintf(stderr, "\nDone.\n");
 
   return 0;
 }

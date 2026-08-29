@@ -5,8 +5,12 @@
 
 
 color ray_color(const ray* r) {
-  color c = {0, 0, 0};
-  return c;
+  vec3 unitDir = unitVec(r->dir);
+  double a = 0.5*(unitDir.y + 1.);
+  color start = {1.0, 1.0, 1.0};
+  /*color end   = {0.5, 0.7, 1.0};*/
+  color end   = {0.0, 0.0, 0.0};
+  return addVec(multVecBy(start, (1.-a)), multVecBy(end, a));
 }
 
 
@@ -15,11 +19,8 @@ int main() {
 
   /* Image */
 
-  /*int imageWidth  = 256;*/
-  /*int imageHeight = 256;*/
   double aspectRatio = 16. / 9.;
-  int imageWidth = 400;
-
+  int imageWidth = 1920;
   int imageHeight = (int)(imageWidth / aspectRatio);
   /* Ensure height is at least 1 */
   imageHeight = (imageHeight < 1) ? 1 : imageHeight;
@@ -71,11 +72,6 @@ int main() {
       point3 pixelCenter = addVec(addVec(pix00, multVecBy(pixel_delta_u, i)), multVecBy(pixel_delta_v, j));
       vec3 rayDir = subVec(pixelCenter, cameraCenter);
       ray r = {cameraCenter, rayDir};
-      /*color pixelColor = {
-        (double)i / (imageWidth - 1),
-        (double)j / (imageHeight - 1),
-        0.
-      };*/
       color pixelColor = ray_color(&r);
       writeColor(stdout, &pixelColor);
     }

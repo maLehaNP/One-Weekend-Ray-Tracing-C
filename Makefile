@@ -1,8 +1,8 @@
 CC = gcc
-CFLAGS = -g -std=c89 -I include#-O3 -flto
-LDFLAGS = -lm
+CFLAGS = -std=c89 -I include# -g -O3 -flto
+LDFLAGS = -static -lm
 SOURCES = src/main.c
-HEADERS = include/vec3.h include/color.h
+HEADERS = include/vec3.h include/color.h include/ray.h
 
 all: main
 

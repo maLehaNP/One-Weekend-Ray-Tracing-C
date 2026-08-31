@@ -85,16 +85,16 @@ int main() {
 double hit_sphere(const point3* center, double radius, const ray* r) {
   vec3 oc = subVec(*center, r->orig);
 
-  double a = dot(r->dir, r->dir);
-  double b = -2. * dot(r->dir, oc);
-  double c = dot(oc, oc) - radius*radius;
+  double a = vecLenSq(r->dir);
+  double h = dot(r->dir, oc);
+  double c = vecLenSq(oc) - radius*radius;
 
-  double discriminant = b*b - 4*a*c;
+  double discriminant = h*h - a*c;
 
   if (discriminant < 0)
     return -1.0;
   else
-    return (-b - sqrt(discriminant)) / (2.*a);
+    return (h - sqrt(discriminant)) / a;
 }
 
 color ray_color(const ray* r) {

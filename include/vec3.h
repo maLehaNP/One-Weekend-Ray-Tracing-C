@@ -34,7 +34,7 @@ void incVecIn(vec3* v, double t) {
 #define scaleVec(v, t) incVecIn((v), (t))
 
 void divVecBy(vec3* v, double t) {
-  incVecIn(v, 1/t);
+  incVecIn(v, 1./t);
 }
 
 double vecLenSq(const vec3 v) {
@@ -66,17 +66,17 @@ void printVec(const vec3* v) {
 }
 
 vec3 addVec(const vec3 v, const vec3 u) {
-  vec3 n = {v.x + u.x, v.y + u.z, v.z + u.z};
+  vec3 n = {v.x + u.x, v.y + u.y, v.z + u.z};
   return n;
 }
 
 vec3 subVec(const vec3 v, const vec3 u) {
-  vec3 n = {v.x - u.x, v.y - u.z, v.z - u.z};
+  vec3 n = {v.x - u.x, v.y - u.y, v.z - u.z};
   return n;
 }
 
 vec3 multVec(const vec3 v, const vec3 u) {
-  vec3 n = {v.x * u.x, v.y * u.z, v.z * u.z};
+  vec3 n = {v.x * u.x, v.y * u.y, v.z * u.z};
   return n;
 }
 
@@ -86,7 +86,7 @@ vec3 multVecBy(const vec3 v, double t) {
 }
 
 vec3 divVec(const vec3 v, double t) {
-  return multVecBy(v, 1/t);
+  return multVecBy(v, 1./t);
 }
 
 double dot(const vec3 v, const vec3 u) {

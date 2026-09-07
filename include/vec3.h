@@ -1,10 +1,6 @@
 #ifndef VEC3_H
 #define VEC3_H
 
-#include <math.h>
-#include <stdio.h>
-
-
 typedef struct vec3_s {
   #ifndef VEC_HALF_PREC
   double x, y, z;

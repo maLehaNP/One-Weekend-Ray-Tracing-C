@@ -1,11 +1,11 @@
 #include <stdio.h>
-#include <vec3.h>
-#include <color.h>
-#include <ray.h>
+#include <stdlib.h>
+#include <rtweekend.h>
+#include <hittable.h>
+#include <hittable_list.h>
 
 
-double hit_sphere(const point3* center, double radius, const ray* r);
-color ray_color(const ray* r);
+color ray_color(const ray* r, const HittableList* world);
 
 
 int main() {
@@ -21,7 +21,7 @@ int main() {
 
   /* Camera */
 
-  point3 cameraCenter = {0., 0., 0.};
+  point3 cameraCenter = { 0., 0., 0. };
   double focalLength = 1.;
 
   /* Virtual Viewport */
@@ -49,6 +49,23 @@ int main() {
   );
   point3 pix00 = addVec(vp_upper_left, multVecBy(addVec(pixel_delta_u, pixel_delta_v), 0.5));
 
+
+  /* World */
+
+  int n = 2;
+  Hittable objects[] = {
+    { Hittable_Circle, { 0,      0, -1 },   0.5 },
+    { Hittable_Circle, { 0, -100.5, -1 }, 100.0 }
+  };
+  /*HittableList world = { n, objects };*/
+  HittableList* world = malloc(sizeof(int) + n * sizeof(Hittable));
+  if (!world)
+    return 1;
+  world->n = n;
+  int i;
+  for (i = 0; i < n; ++i)
+    world->objects[i] = objects[i];
+
   /* Render */
 
   printf("P3\n");  /* P3 means colors are in ASCII */
@@ -72,7 +89,7 @@ int main() {
       );
       vec3 rayDir = subVec(pixelCenter, cameraCenter);
       ray r = {cameraCenter, rayDir};
-      color pixelColor = ray_color(&r);
+      color pixelColor = ray_color(&r, world);
       writeColor(stdout, &pixelColor);
     }
   }
@@ -82,31 +99,11 @@ int main() {
 }
 
 
-double hit_sphere(const point3* center, double radius, const ray* r) {
-  vec3 oc = subVec(*center, r->orig);
-
-  double a = vecLenSq(r->dir);
-  double h = dot(r->dir, oc);
-  double c = vecLenSq(oc) - radius*radius;
-
-  double discriminant = h*h - a*c;
-
-  if (discriminant < 0)
-    return -1.0;
-  else
-    return (h - sqrt(discriminant)) / a;
-}
-
-color ray_color(const ray* r) {
-  point3 sphereCenter = {0, 0, -1};
-  double t = hit_sphere(&sphereCenter, 0.5, r);  /* Distance to intersection */
-  /* If ray intersect sphere */
-  if (t > 0.) {
-    point3 interPoint = ray_at(*r, t);
-    vec3 N = unitVec(subVec(interPoint, sphereCenter));
-    /* [-1, 1] -> [0, 1] */
-    color c = {N.x+1, N.y+1, N.z+1};
-    return multVecBy(c, 0.5);
+color ray_color(const ray* r, const HittableList* world) {
+  HitRec rec;
+  if (hit_List(world, r, 0, infinity, &rec)) {
+    color white = { 1., 1., 1. };
+    return multVecBy(addVec(rec.normal, white), 0.5);
   }
 
   vec3 unitDir = unitVec(r->dir);

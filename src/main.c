@@ -102,7 +102,8 @@ int main() {
 
 color ray_color(const ray* r, const HittableList* world) {
   HitRec rec;
-  if (hit_List(world, r, 0, infinity, &rec)) {
+  interval ray_t = { 0., infinity };
+  if (hit_List(world, r, ray_t, &rec)) {
     color white = { 1., 1., 1. };
     return multVecBy(addVec(rec.normal, white), 0.5);
   }
@@ -110,8 +111,8 @@ color ray_color(const ray* r, const HittableList* world) {
   vec3 unitDir = unitVec(r->dir);
   double a = 0.5*(unitDir.y + 1.);
   color start = {1.0, 1.0, 1.0};
-  /*color end   = {0.5, 0.7, 1.0};*/
-  color end   = {0.0, 0.0, 0.0};
+  color end   = {0.5, 0.7, 1.0};
+  /*color end   = {0.0, 0.0, 0.0};*/
   return addVec(multVecBy(start, (1.-a)), multVecBy(end, a));
 }
 

@@ -27,7 +27,7 @@ void setFaceNormal(HitRec* rec, const ray* r, const vec3* outwardNormal) {
   rec->normal = rec->isFrontFace ? *outwardNormal : negVec(*outwardNormal);
 }
 
-bool hit(const Hittable* hittable, const ray* r, double tmin, double tmax, HitRec* rec) {
+bool hit(const Hittable* hittable, const ray* r, interval ray_t, HitRec* rec) {
   switch (hittable->type) {
     case Hittable_Circle: {
       point3 center = hittable->center;
@@ -44,9 +44,9 @@ bool hit(const Hittable* hittable, const ray* r, double tmin, double tmax, HitRe
 
       double sqd = sqrt(discriminant);
       double root = (h - sqd) / a;
-      if (root <= tmin || tmax <= root) {
+      if (!interval_surrounds(&ray_t, root)) {
         root = (h + sqd) / a;
-        if (root <= tmin || tmax <= root)
+        if (!interval_surrounds(&ray_t, root))
           return false;
       }
 

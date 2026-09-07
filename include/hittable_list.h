@@ -8,14 +8,15 @@ typedef struct {
 
 /*void list_add(Hittable object)*/
 
-int hit_List(const HittableList* list, const ray* r, double tmin, double tmax, HitRec* rec) {
+bool hit_List(const HittableList* list, const ray* r, interval ray_t, HitRec* rec) {
   HitRec tempRec;
   bool hitAnything = false;
-  double closest = tmax;
+  double closest = ray_t.max;
  
   int i;
   for (i = 0; i < list->n; ++i) {
-    if (hit(&(list->objects[i]), r, tmin, closest, &tempRec)) {
+    interval inter = { ray_t.min, closest };
+    if (hit(&(list->objects[i]), r, inter, &tempRec)) {
       hitAnything = true;
       closest = tempRec.t;
       *rec = tempRec;

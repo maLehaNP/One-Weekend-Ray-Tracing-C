@@ -6,11 +6,9 @@ typedef struct {
   Hittable objects[];
 } HittableList;
 
-/*void list_add(Hittable object) {
-  
-}*/
+/*void list_add(Hittable object)*/
 
-int hit_List(HittableList* list, const ray* r, double tmin, double tmax, HitRec* rec) {
+int hit_List(const HittableList* list, const ray* r, double tmin, double tmax, HitRec* rec) {
   HitRec tempRec;
   bool hitAnything = false;
   double closest = tmax;

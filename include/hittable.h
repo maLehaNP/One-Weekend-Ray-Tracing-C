@@ -10,8 +10,7 @@ typedef struct hit_record_s {
 
 
 typedef enum {
-  /*Hittable_List,*/
-  Hittable_Circle
+  Hittable_Circle,
 } HittableType;
 
 typedef struct {
@@ -28,7 +27,7 @@ void setFaceNormal(HitRec* rec, const ray* r, const vec3* outwardNormal) {
   rec->normal = rec->isFrontFace ? *outwardNormal : negVec(*outwardNormal);
 }
 
-bool hit(Hittable* hittable, const ray* r, double tmin, double tmax, HitRec* rec) {
+bool hit(const Hittable* hittable, const ray* r, double tmin, double tmax, HitRec* rec) {
   switch (hittable->type) {
     case Hittable_Circle: {
       point3 center = hittable->center;

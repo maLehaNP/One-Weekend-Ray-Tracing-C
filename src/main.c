@@ -57,7 +57,6 @@ int main() {
     { Hittable_Circle, { 0,      0, -1 },   0.5 },
     { Hittable_Circle, { 0, -100.5, -1 }, 100.0 }
   };
-  /*HittableList world = { n, objects };*/
   HittableList* world = malloc(sizeof(int) + n * sizeof(Hittable));
   if (!world)
     return 1;
@@ -94,6 +93,8 @@ int main() {
     }
   }
   fprintf(stderr, "\nDone.\n");
+
+  free(world);
 
   return 0;
 }

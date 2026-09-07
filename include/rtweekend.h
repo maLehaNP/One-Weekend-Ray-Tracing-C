@@ -3,7 +3,6 @@
 
 #include <math.h>
 #include <stdio.h>
-/*#include <limits.h>*/
 #include <float.h>
 #include <stdbool.h>
 

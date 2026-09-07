@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include "hittable.h"
+#include "rtweekend.h"
 
 
 color ray_color(const ray* r, const HittableList* world);
@@ -10,11 +11,14 @@ color ray_color(const ray* r, const HittableList* world);
 typedef struct {
   double aspectRatio;
   int    imageWidth;
+  int    nsamples;
+
   int    imageHeight;
   point3 center;
   point3 pix00;          /* Location of pixel (0, 0) */
   vec3   pixel_delta_u;  /* Offset to pixel to the right */
   vec3   pixel_delta_v;  /* Offset to pixel below */
+  double pixel_samples_scale;
 } Camera;
 
 void camera_init(Camera* camera) {
@@ -25,6 +29,8 @@ void camera_init(Camera* camera) {
   /* Ensure height is at least 1 */
   imageHeight = (imageHeight < 1) ? 1 : imageHeight;
   camera->imageHeight = imageHeight;
+
+  camera->pixel_samples_scale = 1. / camera->nsamples;
 
   /* Camera */
 
@@ -64,6 +70,29 @@ void camera_init(Camera* camera) {
   camera->pix00 = pix00;
 }
 
+vec3 sample_square() {
+  /* Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square. */
+  vec3 v = { random_double() - 0.5, random_double() + 0.5, 0. };
+  return v;
+}
+
+ray get_ray(int i, int j, Camera* cam) {
+  vec3 offset = sample_square();
+
+  point3 pixelSample = addVec(
+    cam->pix00,
+    addVec(
+      multVecBy(cam->pixel_delta_u, i + offset.x),
+      multVecBy(cam->pixel_delta_v, j + offset.y)
+    )
+  );
+
+  vec3 rayDir = subVec(pixelSample, cam->center);
+  ray r = { cam->center, rayDir };
+
+  return r;
+}
+
 void camera_render(Camera* cam, HittableList* world) {
   camera_init(cam);
 
@@ -81,17 +110,14 @@ void camera_render(Camera* cam, HittableList* world) {
     int i;
     for (i = 0; i < cam->imageWidth; i++)
     {
-      point3 pixelCenter = addVec(
-        cam->pix00,
-        addVec(
-          multVecBy(cam->pixel_delta_u, i),
-          multVecBy(cam->pixel_delta_v, j)
-        )
-      );
-      vec3 rayDir = subVec(pixelCenter, cam->center);
-      ray r = {cam->center, rayDir};
-      color pixelColor = ray_color(&r, world);
-      writeColor(stdout, &pixelColor);
+      color pixelColor = { 0., 0., 0. };
+      int s;
+      for (s = 0; s < cam->nsamples; ++s) {
+        ray r = get_ray(i, j, cam);
+        color rc = ray_color(&r, world);
+        incByVec(&pixelColor, &rc);
+      }
+      writeColor(stdout, multVecBy(pixelColor, cam->pixel_samples_scale));
     }
   }
   fprintf(stderr, "\nDone.\n");

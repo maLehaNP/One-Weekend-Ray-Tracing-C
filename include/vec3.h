@@ -85,6 +85,11 @@ vec3 divVec(const vec3 v, double t) {
   return multVecBy(v, 1./t);
 }
 
+vec3 addToVec(const vec3 v, double t) {
+  vec3 n = {v.x + t, v.y + t, v.z + t};
+  return n;
+}
+
 double dot(const vec3 v, const vec3 u) {
   return v.x * u.x + v.y * u.y + v.z * u.z;
 }

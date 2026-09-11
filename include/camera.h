@@ -6,9 +6,11 @@
 
 
 typedef struct {
+  /* Configurable */
   double aspectRatio;
   int    imageWidth;
   int    nsamples;
+  int    maxDepth;
 
   int    imageHeight;
   point3 center;
@@ -90,7 +92,13 @@ ray get_ray(int i, int j, Camera* cam) {
   return r;
 }
 
-color ray_color(const ray* r, const HittableList* world) {
+color ray_color(const ray* r, const HittableList* world, int depth) {
+  /* Bounce limit */
+  if (depth <= 0) {
+    color black = { 0., 0., 0. };
+    return black;
+  }
+
   HitRec rec;
   interval ray_t = { 0., infinity };
 
@@ -99,7 +107,7 @@ color ray_color(const ray* r, const HittableList* world) {
     return multVecBy(addVec(rec.normal, white), 0.5);*/
     vec3 bounceDir = randomOnHem(&rec.normal);
     ray bouncedRay = { rec.p, bounceDir };
-    return multVecBy(ray_color(&bouncedRay, world), 0.5);
+    return multVecBy(ray_color(&bouncedRay, world, depth - 1), 0.5);
   }
 
   vec3 unitDir = unitVec(r->dir);
@@ -131,7 +139,7 @@ void camera_render(Camera* cam, HittableList* world) {
       int s;
       for (s = 0; s < cam->nsamples; ++s) {
         ray r = get_ray(i, j, cam);
-        color rc = ray_color(&r, world);
+        color rc = ray_color(&r, world, cam->maxDepth);
         incByVec(&pixelColor, &rc);
       }
       writeColor(stdout, multVecBy(pixelColor, cam->pixel_samples_scale));

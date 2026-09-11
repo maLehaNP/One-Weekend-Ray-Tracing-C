@@ -100,7 +100,7 @@ color ray_color(const ray* r, const HittableList* world, int depth) {
   }
 
   HitRec rec;
-  interval ray_t = { 0., infinity };
+  interval ray_t = { 0.001, infinity };
 
   if (hit_List(world, r, ray_t, &rec)) {
     /*color white = { 1., 1., 1. };

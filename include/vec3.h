@@ -107,5 +107,32 @@ vec3 unitVec(const vec3 v) {
   return divVec(v, vecLen(v));
 }
 
+vec3 random() {
+  vec3 v = { random_double(), random_double(), random_double() };
+  return v;
+}
+
+vec3 random_ranged(double min, double max) {
+  vec3 v = { random_double_between(min, max), random_double_between(min, max), random_double_between(min, max) };
+  return v;
+}
+
+vec3 randomUnitVec() {
+  while (true) {
+    point3 p = random_ranged(-1., 1.);
+    double lensq = vecLenSq(p);
+    if (1e-160 < lensq && lensq <= 1)
+      return divVec(p, sqrt(lensq));
+  }
+}
+
+vec3 randomOnHem(const vec3* normal) {
+  vec3 unit = randomUnitVec();
+  if (dot(unit, *normal) > 0.)
+    return unit;
+  else
+    return negVec(unit);
+}
+
 #endif /* VEC3_H */
 

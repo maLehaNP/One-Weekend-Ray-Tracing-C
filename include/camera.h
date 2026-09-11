@@ -5,9 +5,6 @@
 #include "rtweekend.h"
 
 
-color ray_color(const ray* r, const HittableList* world);
-
-
 typedef struct {
   double aspectRatio;
   int    imageWidth;
@@ -93,6 +90,26 @@ ray get_ray(int i, int j, Camera* cam) {
   return r;
 }
 
+color ray_color(const ray* r, const HittableList* world) {
+  HitRec rec;
+  interval ray_t = { 0., infinity };
+
+  if (hit_List(world, r, ray_t, &rec)) {
+    /*color white = { 1., 1., 1. };
+    return multVecBy(addVec(rec.normal, white), 0.5);*/
+    vec3 bounceDir = randomOnHem(&rec.normal);
+    ray bouncedRay = { rec.p, bounceDir };
+    return multVecBy(ray_color(&bouncedRay, world), 0.5);
+  }
+
+  vec3 unitDir = unitVec(r->dir);
+  double a = 0.5*(unitDir.y + 1.);
+  color start = {1.0, 1.0, 1.0};
+  color end   = {0.5, 0.7, 1.0};
+  /*color end   = {0.0, 0.0, 0.0};*/
+  return addVec(multVecBy(start, (1.-a)), multVecBy(end, a));
+}
+
 void camera_render(Camera* cam, HittableList* world) {
   camera_init(cam);
 
@@ -121,23 +138,6 @@ void camera_render(Camera* cam, HittableList* world) {
     }
   }
   fprintf(stderr, "\nDone.\n");
-}
-
-color ray_color(const ray* r, const HittableList* world) {
-  HitRec rec;
-  interval ray_t = { 0., infinity };
-
-  if (hit_List(world, r, ray_t, &rec)) {
-    color white = { 1., 1., 1. };
-    return multVecBy(addVec(rec.normal, white), 0.5);
-  }
-
-  vec3 unitDir = unitVec(r->dir);
-  double a = 0.5*(unitDir.y + 1.);
-  color start = {1.0, 1.0, 1.0};
-  color end   = {0.5, 0.7, 1.0};
-  /*color end   = {0.0, 0.0, 0.0};*/
-  return addVec(multVecBy(start, (1.-a)), multVecBy(end, a));
 }
 
 #endif /* CAMERA_H */

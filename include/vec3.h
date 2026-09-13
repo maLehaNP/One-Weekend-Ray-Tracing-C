@@ -1,6 +1,9 @@
 #ifndef VEC3_H
 #define VEC3_H
 
+//#include <x86intrin.h>  // Include all of the intrinsics headers
+
+
 typedef struct vec3_s {
   #ifndef VEC_HALF_PREC
   double x, y, z;
@@ -8,6 +11,18 @@ typedef struct vec3_s {
   float x, y, z;
   #endif
 } vec3;
+
+//typedef union vec3_s {
+//  #ifndef VEC_HALF_PREC
+//  struct {
+//    double x, y, z;
+//  }
+//  double e[3];
+//  #else
+//  float x, y, z;
+//  #endif
+//} vec3;
+
 
 vec3 negVec(const vec3 v) {
   vec3 nv = {-v.x, -v.y, -v.z};
@@ -77,8 +92,17 @@ vec3 multVec(const vec3 v, const vec3 u) {
 }
 
 vec3 multVecBy(const vec3 v, double t) {
-  vec3 n = {v.x * t, v.y * t, v.z * t};
-  return n;
+  //vec3 n = {v.x * t, v.y * t, v.z * t};
+  //return n;
+
+  return (vec3){ v.x * t, v.y * t, v.z * t };
+
+  //__m128 r1 = _mm_set_ps(v.x, v.y, v.z, 0.0f);
+  //__m128 r2 = _mm_set1_ps(t);
+  //__m128 mul = _mm_mul_ps(r1, r2);
+  //float res[4];
+  //_mm_storeu_ps(res, mul);
+  //return (vec3){ res[0], res[1], res[2] };
 }
 
 vec3 divVec(const vec3 v, double t) {

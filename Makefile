@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -std=c99 -I include# -g -O3 -flto
+CFLAGS = -std=c99 -I include -g -O3# -flto
 LDFLAGS = -static -lm
 SOURCES = src/main.c
 HEADERS = include/vec3.h include/color.h include/ray.h

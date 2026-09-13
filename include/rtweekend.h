@@ -14,16 +14,16 @@ const double pi = 3.1415926535897932385;
 
 /* Utility Functions */
 
-double degrees_to_radians(double degrees) {
+inline double degrees_to_radians(double degrees) {
     return degrees * pi / 180.0;
 }
 
-double random_double() {
+inline double random_double() {
   // Random real in [0, 1)
   return rand() / (RAND_MAX + 1.);
 }
 
-double random_double_between(double min, double max) {
+inline double random_double_between(double min, double max) {
   // Random real in [0, 1)
   return min + (max - min)*random_double();
 }

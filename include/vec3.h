@@ -72,21 +72,21 @@ void incVecBy(vec3* v, double t) {
   return 
 }*/
 
-void printVec(const vec3* v) {
+inline void printVec(const vec3* v) {
   fprintf(stderr, "%f %f %f", v->x, v->y, v->z);
 }
 
-vec3 addVec(const vec3 v, const vec3 u) {
+inline vec3 addVec(const vec3 v, const vec3 u) {
   vec3 n = {v.x + u.x, v.y + u.y, v.z + u.z};
   return n;
 }
 
-vec3 subVec(const vec3 v, const vec3 u) {
+inline vec3 subVec(const vec3 v, const vec3 u) {
   vec3 n = {v.x - u.x, v.y - u.y, v.z - u.z};
   return n;
 }
 
-vec3 multVec(const vec3 v, const vec3 u) {
+inline vec3 multVec(const vec3 v, const vec3 u) {
   vec3 n = {v.x * u.x, v.y * u.y, v.z * u.z};
   return n;
 }
@@ -105,7 +105,7 @@ inline vec3 multVecBy(const vec3 v, double t) {
   //return (vec3){ res[0], res[1], res[2] };
 }
 
-vec3 divVec(const vec3 v, double t) {
+inline vec3 divVec(const vec3 v, double t) {
   return multVecBy(v, 1./t);
 }
 
@@ -114,11 +114,11 @@ vec3 addToVec(const vec3 v, double t) {
   return n;
 }
 
-double dot(const vec3 v, const vec3 u) {
+inline double dot(const vec3 v, const vec3 u) {
   return v.x * u.x + v.y * u.y + v.z * u.z;
 }
 
-vec3 cross(const vec3 v, const vec3 u) {
+inline vec3 cross(const vec3 v, const vec3 u) {
   vec3 n = {
     v.y * u.z - v.z * u.y,
     v.z * u.x - v.x * u.z,
@@ -127,7 +127,7 @@ vec3 cross(const vec3 v, const vec3 u) {
   return n;
 }
 
-vec3 unitVec(const vec3 v) {
+inline vec3 unitVec(const vec3 v) {
   return divVec(v, vecLen(v));
 }
 
@@ -141,7 +141,7 @@ vec3 random_ranged(double min, double max) {
   return v;
 }
 
-vec3 randomUnitVec() {
+inline vec3 randomUnitVec() {
   while (true) {
     point3 p = random_ranged(-1., 1.);
     double lensq = vecLenSq(p);
@@ -150,7 +150,7 @@ vec3 randomUnitVec() {
   }
 }
 
-vec3 randomOnHem(const vec3* normal) {
+inline vec3 randomOnHem(const vec3* normal) {
   vec3 unit = randomUnitVec();
   if (dot(unit, *normal) > 0.)
     return unit;

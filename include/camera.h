@@ -97,7 +97,7 @@ color ray_color(const ray* r, const HittableList* world, int depth) {
   interval ray_t = { 0.001, infinity };
 
   if (hit_List(world, r, ray_t, &rec)) {
-    vec3 bounceDir = randomOnHem(&rec.normal);
+    vec3 bounceDir = addVec(randomOnHem(&rec.normal), rec.normal);
     ray bouncedRay = { rec.p, bounceDir };
     return multVecBy(ray_color(&bouncedRay, world, depth - 1), 0.5);
   }

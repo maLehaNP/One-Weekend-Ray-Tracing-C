@@ -19,12 +19,12 @@ double degrees_to_radians(double degrees) {
 }
 
 double random_double() {
-  /* Random real in [0, 1) */
+  // Random real in [0, 1)
   return rand() / (RAND_MAX + 1.);
 }
 
 double random_double_between(double min, double max) {
-  /* Random real in [0, 1) */
+  // Random real in [0, 1)
   return min + (max - min)*random_double();
 }
 

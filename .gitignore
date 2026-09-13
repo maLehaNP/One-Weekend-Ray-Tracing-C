@@ -1,3 +1,5 @@
 main
 *.ppm
+callgrind.out.*
+valgrind/
 

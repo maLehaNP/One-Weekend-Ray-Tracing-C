@@ -18,8 +18,7 @@ int main() {
   if (!world)
     return 1;
   world->n = n;
-  int i;
-  for (i = 0; i < n; ++i)
+  for (int i = 0; i < n; ++i)
     world->objects[i] = objects[i];
 
   /* Camera */

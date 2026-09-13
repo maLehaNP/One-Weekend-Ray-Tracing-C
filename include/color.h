@@ -11,7 +11,7 @@ void writeColor(FILE* fptr, const color pixelColor) {
   double g = pixelColor.y;
   double b = pixelColor.z;
 
-  /* [0, 1] -> [0, 255] */
+  // [0, 1] -> [0, 255]
   static const interval intensity = { 0.000, 0.999 };
   int rbyte = (int)(255.999 * interval_clamp(&intensity, r));
   int gbyte = (int)(255.999 * interval_clamp(&intensity, g));

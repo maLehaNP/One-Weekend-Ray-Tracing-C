@@ -14,9 +14,9 @@ typedef struct {
 
   int    imageHeight;
   point3 center;
-  point3 pix00;          /* Location of pixel (0, 0) */
-  vec3   pixel_delta_u;  /* Offset to pixel to the right */
-  vec3   pixel_delta_v;  /* Offset to pixel below */
+  point3 pix00;          // Location of pixel (0, 0)
+  vec3   pixel_delta_u;  // Offset to pixel to the right
+  vec3   pixel_delta_v;  // Offset to pixel below
   double pixel_samples_scale;
 } Camera;
 
@@ -25,7 +25,7 @@ void camera_init(Camera* camera) {
   int    imageWidth  = camera->imageWidth;
 
   int imageHeight = (int)(imageWidth / aspectRatio);
-  /* Ensure height is at least 1 */
+  // Ensure height is at least 1
   imageHeight = (imageHeight < 1) ? 1 : imageHeight;
   camera->imageHeight = imageHeight;
 
@@ -41,22 +41,20 @@ void camera_init(Camera* camera) {
   double focalLength = 1.;
   double viewportHeight = 2.;
   double viewportWidth = viewportHeight * (double)imageWidth / imageHeight;
-  /*
-  fprintf(stderr, "imW=%d imH=%d vpW=%f vpH=%f\n",
-          imageWidth, imageHeight, viewportWidth, viewportHeight);
-  */
+  //fprintf(stderr, "imW=%d imH=%d vpW=%f vpH=%f\n",
+  //        imageWidth, imageHeight, viewportWidth, viewportHeight);
 
-  /* Vectors across horiz. & vert. viewport edges */
+  // Vectors across horiz. & vert. viewport edges
   vec3 vp_u = {viewportWidth, 0., 0.};
-  vec3 vp_v = {0., -viewportHeight, 0.};  /* Fixed bag */
+  vec3 vp_v = {0., -viewportHeight, 0.};  // Fixed bag
 
-  /* Pixel to pixel delta vectors */
+  // Pixel to pixel delta vectors
   vec3 pixel_delta_u = divVec(vp_u, imageWidth);
   vec3 pixel_delta_v = divVec(vp_v, imageHeight);
   camera->pixel_delta_u = pixel_delta_u;
   camera->pixel_delta_v = pixel_delta_v;
 
-  /* Upper left pixel */
+  // Upper left pixel
   vec3 vp2cam = {0, 0, focalLength};
   point3 vp_upper_left = subVec(
     subVec(
@@ -70,9 +68,8 @@ void camera_init(Camera* camera) {
 }
 
 vec3 sample_square() {
-  /* Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square. */
-  vec3 v = { random_double() - 0.5, random_double() + 0.5, 0. };
-  return v;
+  // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
+  return (vec3){ random_double() - 0.5, random_double() + 0.5, 0. };
 }
 
 ray get_ray(int i, int j, Camera* cam) {
@@ -87,24 +84,19 @@ ray get_ray(int i, int j, Camera* cam) {
   );
 
   vec3 rayDir = subVec(pixelSample, cam->center);
-  ray r = { cam->center, rayDir };
 
-  return r;
+  return (ray){ cam->center, rayDir };
 }
 
 color ray_color(const ray* r, const HittableList* world, int depth) {
-  /* Bounce limit */
-  if (depth <= 0) {
-    color black = { 0., 0., 0. };
-    return black;
-  }
+  // Bounce limit
+  if (depth <= 0)
+    return (color){ 0., 0., 0. };
 
   HitRec rec;
   interval ray_t = { 0.001, infinity };
 
   if (hit_List(world, r, ray_t, &rec)) {
-    /*color white = { 1., 1., 1. };
-    return multVecBy(addVec(rec.normal, white), 0.5);*/
     vec3 bounceDir = randomOnHem(&rec.normal);
     ray bouncedRay = { rec.p, bounceDir };
     return multVecBy(ray_color(&bouncedRay, world, depth - 1), 0.5);
@@ -114,7 +106,7 @@ color ray_color(const ray* r, const HittableList* world, int depth) {
   double a = 0.5*(unitDir.y + 1.);
   color start = {1.0, 1.0, 1.0};
   color end   = {0.5, 0.7, 1.0};
-  /*color end   = {0.0, 0.0, 0.0};*/
+  //color end   = {0.0, 0.0, 0.0};
   return addVec(multVecBy(start, (1.-a)), multVecBy(end, a));
 }
 
@@ -123,21 +115,18 @@ void camera_render(Camera* cam, HittableList* world) {
 
   /* Render */
 
-  printf("P3\n");  /* P3 means colors are in ASCII */
-  printf("%d %d\n", cam->imageWidth, cam->imageHeight);  /* "columns rows" */
-  printf("255\n");  /* Max color */
+  printf("P3\n");  // P3 means colors are in ASCII
+  printf("%d %d\n", cam->imageWidth, cam->imageHeight);  // "columns rows"
+  printf("255\n");  // Max color
 
-  int j;
-  for (j = 0; j < cam->imageHeight; j++)
+  for (int j = 0; j < cam->imageHeight; j++)
   {
     fprintf(stderr, "\rScanlines remaining: %d           ", cam->imageHeight - j);
-    /*fflush(stderr);*/  /* Flush to display immediately */
-    int i;
-    for (i = 0; i < cam->imageWidth; i++)
+    //fflush(stderr);  // Flush to display immediately
+    for (int i = 0; i < cam->imageWidth; i++)
     {
       color pixelColor = { 0., 0., 0. };
-      int s;
-      for (s = 0; s < cam->nsamples; ++s) {
+      for (int s = 0; s < cam->nsamples; ++s) {
         ray r = get_ray(i, j, cam);
         color rc = ray_color(&r, world, cam->maxDepth);
         incByVec(&pixelColor, &rc);

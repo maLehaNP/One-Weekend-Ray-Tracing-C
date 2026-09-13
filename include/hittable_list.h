@@ -6,7 +6,7 @@ typedef struct {
   Hittable objects[];
 } HittableList;
 
-/*void list_add(Hittable object)*/
+//void list_add(Hittable object)
 
 bool hit_List(const HittableList* list, const ray* r, interval ray_t, HitRec* rec) {
   HitRec tempRec;

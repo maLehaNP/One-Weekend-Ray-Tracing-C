@@ -5,9 +5,6 @@ typedef struct {
   double min, max;
 } interval;
 
-/*interval interval() {
-  interval i = { +infinity, -infinity };
-}*/
 
 double interval_size(interval* i) {
   return i->max - i->min;

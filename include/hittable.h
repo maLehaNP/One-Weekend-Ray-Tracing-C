@@ -21,8 +21,8 @@ typedef struct {
 
 
 void setFaceNormal(HitRec* rec, const ray* r, const vec3* outwardNormal) {
-  /* Sets the hit record normal vector. */
-  /* NOTE: the outwardNormal is assumed to have unit len. */
+  // Sets the hit record normal vector.
+  // NOTE: the outwardNormal is assumed to have unit len.
   rec->isFrontFace = dot(r->dir, *outwardNormal) < 0.;
   rec->normal = rec->isFrontFace ? *outwardNormal : negVec(*outwardNormal);
 }

@@ -91,7 +91,7 @@ vec3 multVec(const vec3 v, const vec3 u) {
   return n;
 }
 
-vec3 multVecBy(const vec3 v, double t) {
+inline vec3 multVecBy(const vec3 v, double t) {
   //vec3 n = {v.x * t, v.y * t, v.z * t};
   //return n;
 

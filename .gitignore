@@ -2,4 +2,5 @@ main
 *.ppm
 callgrind.out.*
 valgrind/
+debug/
 

@@ -6,10 +6,23 @@
 
 typedef vec3 color;
 
+
+inline double lin2gamma(double linearComponent) {
+  if (linearComponent > 0.0)
+    return sqrt(linearComponent);
+
+  return 0.0;
+}
+
 void writeColor(FILE* fptr, const color pixelColor) {
   double r = pixelColor.x;
   double g = pixelColor.y;
   double b = pixelColor.z;
+
+  // Apply a gamma correction
+  r = lin2gamma(r);
+  g = lin2gamma(g);
+  b = lin2gamma(b);
 
   // [0, 1] -> [0, 255]
   static const interval intensity = { 0.000, 0.999 };

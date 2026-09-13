@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <rtweekend.h>
 #include <hittable.h>
 #include <hittable_list.h>
@@ -7,6 +8,8 @@
 
 
 int main() {
+  fprintf(stderr, "PID: %ld\n", (long)getpid());
+
   /* World */
 
   int n = 2;

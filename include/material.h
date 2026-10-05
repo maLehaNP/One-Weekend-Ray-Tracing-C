@@ -12,6 +12,7 @@ typedef enum MaterialType_e {
 typedef struct Material {
   MaterialType type;
   color albedo;
+  double fuzz;
 } Material;
 
 
@@ -34,9 +35,10 @@ bool scatter(Material* mat, const ray* r_in, const HitRec* rec,
     case Material_Metal:
     {
       vec3 reflectDir = reflect(r_in->dir, rec->normal);
+      reflectDir = addVec(unitVec(reflectDir), multVecBy(randomUnitVec(), mat->fuzz));
       *scattered = (ray){ rec->p, reflectDir };
       *attenuation = mat->albedo;
-      return true;
+      return (dot(scattered->dir, rec->normal) > 0.);
       break;
     }
   }

@@ -15,8 +15,8 @@ int main() {
 
   Material mat_ground = { Material_Lambertian, (color){ 0.8, 0.8, 0.0 } };
   Material mat_center = { Material_Lambertian, (color){ 0.1, 0.2, 0.5 } };
-  Material mat_left   = { Material_Metal,      (color){ 0.8, 0.8, 0.8 } };
-  Material mat_right  = { Material_Metal,      (color){ 0.8, 0.6, 0.2 } };
+  Material mat_left   = { Material_Metal,      (color){ 0.8, 0.8, 0.8 }, 0.3 };
+  Material mat_right  = { Material_Metal,      (color){ 0.8, 0.6, 0.2 }, 1.0 };
 
   int n = 4;
   Hittable objects[] = {
@@ -26,14 +26,6 @@ int main() {
     { Hittable_Circle, {  1.0,    0.0, -1.0 },   0.5, &mat_right  },
   };
 
-  //HittableList* world = malloc(sizeof(int) + n * sizeof(Hittable));
-  //if (!world)
-  //  return 1;
-  //world->n = n;
-  //for (int i = 0; i < n; ++i)
-  //  world->objects[i] = objects[i];
-
-  //HittableList* world = malloc(sizeof(HittableList));
   HittableList world = { n, objects };
 
   /* Camera */
@@ -42,7 +34,7 @@ int main() {
 
   cam.aspectRatio = 16.0 / 9.0;
   cam.imageWidth  = 1280;
-  cam.nsamples = 64;
+  cam.nsamples = 128;
   cam.maxDepth = 32;
 
   camera_render(&cam, &world);

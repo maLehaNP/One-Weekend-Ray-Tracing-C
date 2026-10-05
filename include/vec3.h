@@ -52,6 +52,12 @@ double vecLenSq(const vec3 v) {
   return v.x*v.x + v.y*v.y + v.z*v.z;
 }
 
+bool near_zero(vec3* v) {
+  // Return true if the vector is close to zero in all dimensions.
+  double s = 1e-8;
+  return (fabs(v->x) < s) && (fabs(v->y) < s) && (fabs(v->z) < s);
+}
+
 double vecLen(const vec3 v) {
   return sqrt(vecLenSq(v));
 }
@@ -156,6 +162,10 @@ inline vec3 randomOnHem(const vec3* normal) {
     return unit;
   else
     return negVec(unit);
+}
+
+inline vec3 reflect(const vec3 v, const vec3 n) {
+  return subVec(v, multVecBy(n, 2*dot(v, n)));
 }
 
 #endif /* VEC3_H */

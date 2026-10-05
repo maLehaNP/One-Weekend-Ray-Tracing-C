@@ -5,6 +5,7 @@
 #include <hittable.h>
 #include <hittable_list.h>
 #include <camera.h>
+#include <material.h>
 
 
 int main() {
@@ -12,17 +13,28 @@ int main() {
 
   /* World */
 
-  int n = 2;
+  Material mat_ground = { Material_Lambertian, (color){ 0.8, 0.8, 0.0 } };
+  Material mat_center = { Material_Lambertian, (color){ 0.1, 0.2, 0.5 } };
+  Material mat_left   = { Material_Metal,      (color){ 0.8, 0.8, 0.8 } };
+  Material mat_right  = { Material_Metal,      (color){ 0.8, 0.6, 0.2 } };
+
+  int n = 4;
   Hittable objects[] = {
-    { Hittable_Circle, { 0,      0, -1 },   0.5 },
-    { Hittable_Circle, { 0, -100.5, -1 }, 100.0 }
+    { Hittable_Circle, {  0.0,    0.0, -1.2 },   0.5, &mat_center },
+    { Hittable_Circle, {  0.0, -100.5, -1.0 }, 100.0, &mat_ground },
+    { Hittable_Circle, { -1.0,    0.0, -1.0 },   0.5, &mat_left   },
+    { Hittable_Circle, {  1.0,    0.0, -1.0 },   0.5, &mat_right  },
   };
-  HittableList* world = malloc(sizeof(int) + n * sizeof(Hittable));
-  if (!world)
-    return 1;
-  world->n = n;
-  for (int i = 0; i < n; ++i)
-    world->objects[i] = objects[i];
+
+  //HittableList* world = malloc(sizeof(int) + n * sizeof(Hittable));
+  //if (!world)
+  //  return 1;
+  //world->n = n;
+  //for (int i = 0; i < n; ++i)
+  //  world->objects[i] = objects[i];
+
+  //HittableList* world = malloc(sizeof(HittableList));
+  HittableList world = { n, objects };
 
   /* Camera */
 
@@ -33,9 +45,9 @@ int main() {
   cam.nsamples = 64;
   cam.maxDepth = 32;
 
-  camera_render(&cam, world);
+  camera_render(&cam, &world);
 
-  free(world);
+  //free(world);
 
   return 0;
 }

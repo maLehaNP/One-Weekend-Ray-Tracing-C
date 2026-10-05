@@ -3,6 +3,7 @@
 
 #include "hittable.h"
 #include "rtweekend.h"
+#include "material.h"
 
 
 typedef struct {
@@ -97,9 +98,15 @@ color ray_color(const ray* r, const HittableList* world, int depth) {
   interval ray_t = { 0.001, infinity };
 
   if (hit_List(world, r, ray_t, &rec)) {
-    vec3 bounceDir = addVec(rec.normal, randomOnHem(&rec.normal));
-    ray bouncedRay = { rec.p, bounceDir };
-    return multVecBy(ray_color(&bouncedRay, world, depth - 1), 0.5);
+    //vec3 bounceDir = addVec(rec.normal, randomOnHem(&rec.normal));
+    //ray bouncedRay = { rec.p, bounceDir };
+    //return multVecBy(ray_color(&bouncedRay, world, depth - 1), 0.5);
+    ray scattered;
+    color atten;
+    if (scatter(rec.mat, r, &rec, &atten, &scattered)) {
+      return multVec(atten, ray_color(&scattered, world, depth-1));
+    }
+    return (color){ 0, 0, 0 };
   }
 
   vec3 unitDir = unitVec(r->dir);

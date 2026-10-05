@@ -1,11 +1,15 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
+// Forward declaration for resolving circular ref.
+struct Material;
+
 typedef struct hit_record_s {
   point3 p;
   vec3 normal;
   double t;
   int isFrontFace;
+  struct Material* mat;
 } HitRec;
 
 
@@ -17,6 +21,7 @@ typedef struct {
   HittableType type;
   point3 center;
   double radius;
+  struct Material* mat;
 } Hittable;
 
 
@@ -54,6 +59,7 @@ bool hit(const Hittable* hittable, const ray* r, interval ray_t, HitRec* rec) {
       rec->p = ray_at(*r, rec->t);
       vec3 outwardNormal = divVec(subVec(rec->p, center), radius);
       setFaceNormal(rec, r, &outwardNormal);
+      rec->mat = hittable->mat;
 
       return true;
     }

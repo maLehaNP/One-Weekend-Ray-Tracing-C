@@ -45,13 +45,25 @@ bool scatter(Material* mat, const ray* r_in, const HitRec* rec,
     }
     case Material_Dielectric:
     {
-      *attenuation = (color){ 1.0, 1.0, 1.0 };
+      *attenuation = (color){ 1.0, 1.0, 1.0 };  // glass surface absorbs nothing
       double ri = rec->isFrontFace ? (1.0/mat->refractionIndex) : mat->refractionIndex;
 
       vec3 unitDir = unitVec(r_in->dir);
-      vec3 refracted = refract(&unitDir, &rec->normal, ri);
+      //vec3 refracted = refract(&unitDir, &rec->normal, ri);
+      double cos_theta = fmin(dot(negVec(unitDir), rec->normal), 1.0);
+      double sin_theta = sqrt(1.0 - cos_theta*cos_theta);
 
-      *scattered = (ray){ rec->p, refracted };
+      bool cannot_refract = (ri * sin_theta) > 1.0;
+      vec3 dir;
+
+      if (cannot_refract)
+        dir = reflect(unitDir, rec->normal);
+      else
+        dir = refract(&unitDir, &rec->normal, ri);
+
+      //*scattered = (ray){ rec->p, refracted };
+      *scattered = (ray){ rec->p, dir };
+
       return true;
       break;
     }

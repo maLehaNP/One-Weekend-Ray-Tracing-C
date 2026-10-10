@@ -13,20 +13,19 @@ int main() {
 
   /* World */
 
-  Material mat_ground = { Material_Lambertian, (color){ 0.8, 0.8, 0.0 } };
-  Material mat_center = { Material_Lambertian, (color){ 0.1, 0.2, 0.5 } };
-  Material mat_left   = {
-    .type=Material_Dielectric,
-    .refractionIndex=1.0/1.33  // as if world filled with water
-  };
-  Material mat_right  = { Material_Metal,      (color){ 0.8, 0.6, 0.2 }, 1.0 };
+  Material mat_ground = { Material_Lambertian, (color){ 0.8, 0.8, 0.0 }       };
+  Material mat_center = { Material_Lambertian, (color){ 0.1, 0.2, 0.5 }       };
+  Material mat_right  = { Material_Metal,      (color){ 0.8, 0.6, 0.2 }, 0.0  };
+  Material mat_left   = { .type=Material_Dielectric, .refractionIndex=1.5     };
+  Material mat_bubble = { .type=Material_Dielectric, .refractionIndex=1.0/1.5 };
 
-  int n = 4;
+  int n = 5;
   Hittable objects[] = {
     { Hittable_Circle, {  0.0,    0.0, -1.2 },   0.5, &mat_center },
     { Hittable_Circle, {  0.0, -100.5, -1.0 }, 100.0, &mat_ground },
-    { Hittable_Circle, { -1.0,    0.0, -1.0 },   0.5, &mat_left   },
     { Hittable_Circle, {  1.0,    0.0, -1.0 },   0.5, &mat_right  },
+    { Hittable_Circle, { -1.0,    0.0, -1.0 },   0.5, &mat_left   },
+    { Hittable_Circle, { -1.0,    0.0, -1.0 },   0.4, &mat_bubble },
   };
 
   HittableList world = { n, objects };

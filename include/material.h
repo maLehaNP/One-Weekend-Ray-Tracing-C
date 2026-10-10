@@ -17,6 +17,13 @@ typedef struct Material {
   double refractionIndex;
 } Material;
 
+static double reflectance(double cosine, double refractionIndex) {
+  // Use Schlick's approximation for reflectance.
+  double r0 = (1 - refractionIndex) / (1 + refractionIndex);
+  r0 = r0*r0;
+  return r0 + (1-r0) * pow((1.0-cosine), 5);
+}
+
 
 bool scatter(Material* mat, const ray* r_in, const HitRec* rec,
              color* attenuation, ray* scattered)
@@ -56,7 +63,7 @@ bool scatter(Material* mat, const ray* r_in, const HitRec* rec,
       bool cannot_refract = (ri * sin_theta) > 1.0;
       vec3 dir;
 
-      if (cannot_refract)
+      if (cannot_refract || reflectance(cos_theta, ri) > random_double())
         dir = reflect(unitDir, rec->normal);
       else
         dir = refract(&unitDir, &rec->normal, ri);

@@ -126,9 +126,13 @@ void camera_render(Camera* cam, HittableList* world) {
   printf("%d %d\n", cam->imageWidth, cam->imageHeight);  // "columns rows"
   printf("255\n");  // Max color
 
+  int remaining = cam->imageHeight;
+  color* colors = (color*)malloc((cam->imageWidth * cam->imageHeight) * sizeof(color));
+
+  //#pragma omp parallel for schedule(dynamic) shared(remaining)
   for (int j = 0; j < cam->imageHeight; j++)
   {
-    fprintf(stderr, "\rScanlines remaining: %d           ", cam->imageHeight - j);
+    fprintf(stderr, "\rScanlines remaining: %d           ", remaining);
     //fflush(stderr);  // Flush to display immediately
     for (int i = 0; i < cam->imageWidth; i++)
     {
@@ -138,9 +142,16 @@ void camera_render(Camera* cam, HittableList* world) {
         color rc = ray_color(&r, world, cam->maxDepth);
         incByVec(&pixelColor, &rc);
       }
-      writeColor(stdout, multVecBy(pixelColor, cam->pixel_samples_scale));
+      //writeColor(stdout, multVecBy(pixelColor, cam->pixel_samples_scale));
+      colors[cam->imageWidth*j + i] = multVecBy(pixelColor, cam->pixel_samples_scale);
     }
+    remaining--;
   }
+
+  for (int j = 0; j < cam->imageHeight; j++)
+    for (int i = 0; i < cam->imageWidth; i++)
+      writeColor(stdout, colors[cam->imageWidth*j + i]);
+
   fprintf(stderr, "\nDone.\n");
 }
 

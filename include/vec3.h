@@ -168,5 +168,12 @@ inline vec3 reflect(const vec3 v, const vec3 n) {
   return subVec(v, multVecBy(n, 2*dot(v, n)));
 }
 
+inline vec3 refract(const vec3* uv, const vec3* n, double etai_over_etat) {
+  double cos_theta = fmin(dot(negVec(*uv), *n), 1.0);
+  vec3 r_out_perp = multVecBy(addVec(*uv, multVecBy(*n, cos_theta)), etai_over_etat);
+  vec3 r_out_parallel = multVecBy(*n, -sqrt(fabs(1.0 - vecLenSq(r_out_perp))));
+  return addVec(r_out_perp, r_out_parallel);
+}
+
 #endif /* VEC3_H */
 

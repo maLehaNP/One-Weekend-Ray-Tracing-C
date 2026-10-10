@@ -7,12 +7,14 @@
 typedef enum MaterialType_e {
   Material_Lambertian,
   Material_Metal,
+  Material_Dielectric,
 } MaterialType;
 
 typedef struct Material {
   MaterialType type;
   color albedo;
   double fuzz;
+  double refractionIndex;
 } Material;
 
 
@@ -41,6 +43,21 @@ bool scatter(Material* mat, const ray* r_in, const HitRec* rec,
       return (dot(scattered->dir, rec->normal) > 0.);
       break;
     }
+    case Material_Dielectric:
+    {
+      *attenuation = (color){ 1.0, 1.0, 1.0 };
+      double ri = rec->isFrontFace ? (1.0/mat->refractionIndex) : mat->refractionIndex;
+
+      vec3 unitDir = unitVec(r_in->dir);
+      vec3 refracted = refract(&unitDir, &rec->normal, ri);
+
+      *scattered = (ray){ rec->p, refracted };
+      return true;
+      break;
+    }
+    default:
+      return false;
+      break;
   }
 }
 

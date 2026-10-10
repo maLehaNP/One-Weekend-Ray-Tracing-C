@@ -15,7 +15,8 @@ int main() {
 
   Material mat_ground = { Material_Lambertian, (color){ 0.8, 0.8, 0.0 } };
   Material mat_center = { Material_Lambertian, (color){ 0.1, 0.2, 0.5 } };
-  Material mat_left   = { Material_Metal,      (color){ 0.8, 0.8, 0.8 }, 0.3 };
+  //Material mat_left   = { Material_Metal,      (color){ 0.8, 0.8, 0.8 }, 0.3 };
+  Material mat_left   = { .type=Material_Dielectric, .refractionIndex=1.50 };
   Material mat_right  = { Material_Metal,      (color){ 0.8, 0.6, 0.2 }, 1.0 };
 
   int n = 4;
